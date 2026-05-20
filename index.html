@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obra da Gabi e do Matheus</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #18bc9c;
+            --bg-light: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* --- MENUS LATERAIS (CÔMODOS) --- */
+        #sidebar {
+            width: 300px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+        }
+
+        #sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            text-align: center;
+        }
+
+        .room-bucket {
+            margin-bottom: 15px;
+        }
+
+        .room-title {
+            background-color: #34495e;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-title:hover {
+            background-color: #415b76;
+        }
+
+        .dropdown-content {
+            display: none;
+            background-color: #1a252f;
+            padding: 10px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .category-title {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin: 8px 0 4px 0;
+            font-weight: bold;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            margin: 5px 0;
+        }
+
+        .task-item input {
+            margin-right: 8px;
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        #main-content {
+            margin-left: 300px;
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* --- CRONOGRAMA GANTT --- */
+        .gantt-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .gantt-container h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .gantt-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .gantt-table th, .gantt-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .gantt-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .month-header {
+            font-weight: bold;
+            background-color: #34495e !important;
+        }
+
+        .bar-container {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            height: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        .gantt-bar {
+            background-color: var(--secondary);
+            height: 100%;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* --- SEÇÃO INFERIOR (MATERIAIS E CONTRATOS) --- */
+        .lists-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .lists-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .list-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .list-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 5px;
+        }
+
+        .shopping-list {
+            list-style: none;
+        }
+
+        .shopping-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-badge.contract {
+            background-color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>Cômodos da Obra</h2>
+        
+        <div id="rooms-container"></div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <h1>Diário de Obra</h1>
+            <p>Acompanhamento do sonho da Gabi & do Matheus</p>
+        </header>
+
+        <div class="gantt-container">
+            <h3>📅 Cronograma Gantt (Planejamento de 3 Meses)</h3>
+            <table class="gantt-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 25%;">Etapa Geral da Obra</th>
+                        <th colspan="2" class="month-header">Junho</th>
+                        <th colspan="2" class="month-header">Julho</th>
+                        <th colspan="2" class="month-header">Agosto</th>
+                    </tr>
+                    <tr>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Alvenaria e Estrutura</td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Telhado e Cobertura</td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #3498db;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Instalações Hidráulicas</td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #9b59b6;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Instalações Elétricas</td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #f1c40f; color: #333;">Fase Bruta</div></div></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Colocação de Pisos e Revestimentos</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #e67e22;">Acabamentos</div></div></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Pintura e Outros Detalhes</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #18bc9c;">Finalização</div></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="lists-section">
+            
+            <div class="list-card">
+                <h3>🛍️ Materiais e Revestimentos a Comprar</h3>
+                <ul class="shopping-list">
+                    <li>
+                        <span>Porcelanato da Sala (Metragem: 45m²)</span>
+                        <span class="status-badge">Falta Adquirir</span>
+                    </li>
+                    <li>
+                        <span>Revestimento de Azulejo Metrô (Cozinha)</span>
+                        <span class="status-badge">Falta Adquirir</span>
+                    </li>
+                    <li>
+                        <span>Argamassa AC3 e Rejunte Epóxi</span>
+                        <span class="status-badge">Falta Adquirir</span>
+                    </li>
+                    <li>
+                        <span>Fios de Cobre (2.5mm e 4mm) e Disjuntores</span>
+                        <span class="status-badge">Falta Adquirir</span>
+                    </li>
+                    <li>
+                        <span>Vasos Sanitários e Torneiras Monocomando</span>
+                        <span class="status-badge">Falta Adquirir</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list-card">
+                <h3>🤝 Mão de Obra e Serviços a Contratar</h3>
+                <ul class="shopping-list">
+                    <li>
+                        <span>Instalador de Calhas e Rufos</span>
+                        <span class="status-badge contract">Orçamento Pendente</span>
+                    </li>
+                    <li>
+                        <span>Gesseiro (Teto Rebaixado e Sancas)</span>
+                        <span class="status-badge contract">A Contratar</span>
+                    </li>
+                    <li>
+                        <span>Pintor Profissional (Interno/Externo)</span>
+                        <span class="status-badge contract">A Contratar</span>
+                    </li>
+                    <li>
+                        <span>Marmoraria (Bancadas da Cozinha e Banheiros)</span>
+                        <span class="status-badge contract">A Contratar</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Lista de cômodos da casa
+        const comodos = ["Sala de Estar", "Cozinha", "Quarto Casal", "Banheiro Social", "Área de Serviço / Lavanderia", "Quintal / Garagem"];
+        
+        // Categorias exigidas por cômodo
+        const categorias = ["Elétrica", "Hidráulica", "Alvenaria", "Telhado", "Piso", "Revestimento", "Outros"];
+
+        const container = document.getElementById('rooms-container');
+
+        // Renderizar dinamicamente o menu lateral para evitar repetição massiva de HTML
+        comodos.forEach((comodo, index) => {
+            const roomBucket = document.createElement('div');
+            roomBucket.className = 'room-bucket';
+
+            // Botão do Cômodo (Dropdown)
+            const button = document.createElement('button');
+            button.className = 'room-title';
+            button.innerHTML = `<span>${comodo}</span> <span>▼</span>`;
+            button.onclick = () => toggleDropdown(`dropdown-${index}`);
+
+            // Conteúdo do Dropdown
+            const content = document.createElement('div');
+            content.id = `dropdown-${index}`;
+            content.className = 'dropdown-content';
+
+            // Inserir categorias e checkboxes genéricos para simulação
+            categorias.forEach(cat => {
+                const catTitle = document.createElement('div');
+                catTitle.className = 'category-title';
+                catTitle.innerText = cat;
+                content.appendChild(catTitle);
+
+                // Exemplo de tarefa simulada para a categoria
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `<input type="checkbox"> <span>Executar/Revisar ${cat.toLowerCase()}</span>`;
+                content.appendChild(taskItem);
+            });
+
+            roomBucket.appendChild(button);
+            roomBucket.appendChild(content);
+            container.appendChild(roomBucket);
+        });
+
+        // Função para abrir e fechar o dropdown de cada cômodo
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            } else {
+                dropdown.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
