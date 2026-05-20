@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obra da Gabi e do Matheus</title>
+    <title>Acompanhamento do sonho da Gabi e do Matheus</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -138,13 +138,14 @@
         }
 
         header {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             text-align: center;
         }
 
         header h1 {
             color: var(--primary);
-            margin-bottom: 5px;
+            font-size: 1.8rem;
+            font-weight: 700;
         }
 
         /* --- CRONOGRAMA GANTT --- */
@@ -276,8 +277,7 @@
 
     <div id="main-content">
         <header>
-            <h1>Diário de Obra</h1>
-            <p>Acompanhamento do sonho da Gabi & do Matheus</p>
+            <h1>Acompanhamento do sonho da Gabi e do Matheus</h1>
         </header>
 
         <div class="gantt-container">
@@ -392,7 +392,7 @@
         
         const categorias = ["Elétrica", "Hidráulica", "Alvenaria", "Telhado", "Piso", "Revestimento", "Outros"];
 
-        // CONFIGURAÇÃO DA GALERIA: insira aqui os nomes exatos das imagens que estão dentro da sua pasta ./fotos
+        // Lista de fotos do seu diretório ./fotos (ajuste os nomes conforme necessário)
         const arquivosDeFotos = [
             "foto1.jpg",
             "foto2.jpg",
@@ -429,13 +429,12 @@
             container.appendChild(roomBucket);
         });
 
-        // Renderizar Fotos da Galeria Dinamicamente
+        // Renderizar Fotos da Galeria
         arquivosDeFotos.forEach(foto => {
             const img = document.createElement('img');
             img.src = `./fotos/${foto}`;
             img.className = 'photo-item';
             img.alt = 'Foto da Obra';
-            // Abrir imagem em tela cheia se for clicada
             img.onclick = () => window.open(img.src, '_blank');
             photoGrid.appendChild(img);
         });
