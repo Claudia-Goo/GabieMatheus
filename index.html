@@ -27,7 +27,7 @@
             min-height: 100vh;
         }
 
-        /* --- MENUS LATERAIS (CÔMODOS) --- */
+        /* --- MENUS LATERAIS (CÔMODOS E GALERIA) --- */
         #sidebar {
             width: 320px;
             background-color: var(--primary);
@@ -36,18 +36,20 @@
             overflow-y: auto;
             height: 100vh;
             position: fixed;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         #sidebar h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.4rem;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--secondary);
             text-align: center;
         }
 
         .room-bucket {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .room-title {
@@ -92,6 +94,41 @@
             cursor: pointer;
         }
 
+        /* --- SEÇÃO DA GALERIA --- */
+        .gallery-section {
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #34495e;
+        }
+
+        .gallery-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            text-align: center;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .photo-item {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid #34495e;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary);
+        }
+
         /* --- CONTEÚDO PRINCIPAL --- */
         #main-content {
             margin-left: 320px;
@@ -111,3 +148,302 @@
         }
 
         /* --- CRONOGRAMA GANTT --- */
+        .gantt-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .gantt-container h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .gantt-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .gantt-table th, .gantt-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .gantt-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .month-header {
+            font-weight: bold;
+            background-color: #34495e !important;
+        }
+
+        .bar-container {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            height: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        .gantt-bar {
+            background-color: var(--secondary);
+            height: 100%;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* --- SEÇÃO INFERIOR --- */
+        .lists-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            #sidebar { position: relative; width: 100%; height: auto; }
+            body { flex-direction: column; }
+            #main-content { margin-left: 0; }
+            .lists-section { grid-template-columns: 1fr; }
+        }
+
+        .list-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .list-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 5px;
+        }
+
+        .shopping-list {
+            list-style: none;
+        }
+
+        .shopping-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-badge.contract {
+            background-color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <div>
+            <h2>Cômodos da Obra</h2>
+            <div id="rooms-container" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="gallery-section">
+            <h3>📸 Galeria da Obra</h3>
+            <div class="photo-grid" id="photo-grid">
+                </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <h1>Diário de Obra</h1>
+            <p>Acompanhamento do sonho da Gabi & do Matheus</p>
+        </header>
+
+        <div class="gantt-container">
+            <h3>📅 Cronograma Gantt (Planejamento de 3 Meses)</h3>
+            <table class="gantt-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 25%;">Etapa Geral da Obra</th>
+                        <th colspan="2" class="month-header">Junho</th>
+                        <th colspan="2" class="month-header">Julho</th>
+                        <th colspan="2" class="month-header">Agosto</th>
+                    </tr>
+                    <tr>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                        <th>Quinzena 1</th>
+                        <th>Quinzena 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Alvenaria e Estrutura</td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Telhado e Cobertura</td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #3498db;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Instalações Hidráulicas</td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #9b59b6;">100%</div></div></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Instalações Elétricas</td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #f1c40f; color: #333;">Fase Bruta</div></div></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Colocação de Pisos e Revestimentos</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2"><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #e67e22;">Acabamentos</div></div></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Pintura e Outros Detalhes</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="bar-container"><div class="gantt-bar" style="width: 100%; background-color: #18bc9c;">Finalização</div></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="lists-section">
+            <div class="list-card">
+                <h3>🛍️ Materiais e Revestimentos a Comprar</h3>
+                <ul class="shopping-list">
+                    <li><span>Tacos e pisos de madeira faltantes</span><span class="status-badge">Falta Adquirir</span></li>
+                    <li><span>Revestimento de Azulejo Metrô (Cozinha)</span><span class="status-badge">Falta Adquirir</span></li>
+                    <li><span>Argamassa AC3 e Rejunte Epóxi</span><span class="status-badge">Falta Adquirir</span></li>
+                    <li><span>Fios de Cobre (2.5mm e 4mm) e Disjuntores</span><span class="status-badge">Falta Adquirir</span></li>
+                    <li><span>Vasos Sanitários e Torneiras Monocomando</span><span class="status-badge">Falta Adquirir</span></li>
+                </ul>
+            </div>
+
+            <div class="list-card">
+                <h3>🤝 Mão de Obra e Serviços a Contratar</h3>
+                <ul class="shopping-list">
+                    <li><span>Instalador de Calhas e Rufos</span><span class="status-badge contract">Orçamento Pendente</span></li>
+                    <li><span>Gesseiro (Teto Rebaixado e Sancas)</span><span class="status-badge contract">A Contratar</span></li>
+                    <li><span>Pintor Profissional (Interno/Externo)</span><span class="status-badge contract">A Contratar</span></li>
+                    <li><span>Marmoraria (Bancadas da Cozinha e Banheiros)</span><span class="status-badge contract">A Contratar</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const comodos = [
+            "Sala de Estar", 
+            "Sala de TV", 
+            "Cozinha", 
+            "Espaço Gourmet", 
+            "Quarto Casal", 
+            "Banheiro Social", 
+            "Piscina / Sala de Máquinas",
+            "Oficina",
+            "Área de Serviço", 
+            "Quintal / Garagem"
+        ];
+        
+        const categorias = ["Elétrica", "Hidráulica", "Alvenaria", "Telhado", "Piso", "Revestimento", "Outros"];
+
+        // CONFIGURAÇÃO DA GALERIA: insira aqui os nomes exatos das imagens que estão dentro da sua pasta ./fotos
+        const arquivosDeFotos = [
+            "foto1.jpg",
+            "foto2.jpg",
+            "foto3.jpg",
+            "foto4.jpg"
+        ];
+
+        const container = document.getElementById('rooms-container');
+        const photoGrid = document.getElementById('photo-grid');
+
+        // Renderizar Cômodos
+        comodos.forEach((comodo, index) => {
+            const roomBucket = document.createElement('div');
+            roomBucket.className = 'room-bucket';
+
+            const button = document.createElement('button');
+            button.className = 'room-title';
+            button.innerHTML = `<span>${comodo}</span> <span>▼</span>`;
+            button.onclick = () => toggleDropdown(`dropdown-${index}`);
+
+            const content = document.createElement('div');
+            content.id = `dropdown-${index}`;
+            content.className = 'dropdown-content';
+
+            categorias.forEach(cat => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `<input type="checkbox"> <span>${cat}</span>`;
+                content.appendChild(taskItem);
+            });
+
+            roomBucket.appendChild(button);
+            roomBucket.appendChild(content);
+            container.appendChild(roomBucket);
+        });
+
+        // Renderizar Fotos da Galeria Dinamicamente
+        arquivosDeFotos.forEach(foto => {
+            const img = document.createElement('img');
+            img.src = `./fotos/${foto}`;
+            img.className = 'photo-item';
+            img.alt = 'Foto da Obra';
+            // Abrir imagem em tela cheia se for clicada
+            img.onclick = () => window.open(img.src, '_blank');
+            photoGrid.appendChild(img);
+        });
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+    </script>
+</body>
+</html>
